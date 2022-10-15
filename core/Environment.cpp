@@ -220,6 +220,7 @@ Step()
 		GetDesiredTorques();
 		mCharacter->GetSkeleton()->setForces(mDesiredTorque);
 	}
+	//mCharacter->GetSkeleton()->getBodyNode("Trash")->getParentJoint()->setForces(Eigen::Vector3d(10.0, 10.0, 0.0));
 
 	mWorld->step();
 	// Eigen::VectorXd p_des = mTargetPositions;
@@ -281,7 +282,7 @@ IsEndOfEpisode()
 	Eigen::VectorXd p = mCharacter->GetSkeleton()->getPositions();
 	Eigen::VectorXd v = mCharacter->GetSkeleton()->getVelocities();
 
-	double root_y = mCharacter->GetSkeleton()->getBodyNode(0)->getTransform().translation()[1] - mGround->getRootBodyNode()->getCOM()[1];
+	double root_y = mCharacter->GetSkeleton()->getBodyNode("Pelvis")->getTransform().translation()[1] - mGround->getRootBodyNode()->getCOM()[1];
 	if(root_y<1.3)
 		isTerminal =true;
 	else if (dart::math::isNan(p) || dart::math::isNan(v))
