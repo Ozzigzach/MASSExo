@@ -1,18 +1,20 @@
 <Skeleton name="Human">
+
     <Node name="P" parent="None" >
-        <Body type="Box" mass="0.0000001" size="0.1 0.1 0.1" contact="Off" color="0.6 0.6 1.5 1.0" obj="Pelvis.obj">
-            <Transformation linear="0.0 1.0 0.0 0.0 0.0 1.0 1.0 0.0 0.0" translation="0.0 0.9809 -0.0308 "/>
+        <Body type="Box" mass="0.0001" size="0.000001 0.000001 0.000001" contact="Off" color="0.6 0.6 1.5 1.0" obj="None">
+            <Transformation linear="1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0" translation="0.0 0.0 0.0"/>
         </Body>
-        <Joint type="Planar" bvh="Character1_Spine" lower="-40.0 -40.0 0.0" upper="40.0 40.0 0.0" springStiff="0.0 0.0 0.0" damping="0.0 0.0 0.0">
-            <Transformation linear="0.0 1.0 0.0 0.0 0.0 1.0 1.0 0.0 0.0" translation="0.0 1.7 0.0"/>
+        <Joint type="Planar" bvh="Character1_Spine" lower="-40.0 -40.0 -0.1" upper="40.0 40.0 0.1" springStiff="0.0 0.0 0.0" damping="0.0 0.0 0.0" plane="XZ">
+            <Transformation linear="1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0" translation="0.0 0.0 0.0"/>
         </Joint>
-    </Node> 
+    </Node>
+
     <Node name="Pelvis" parent="P" >
-        <Body type="Box" mass="15.0" size="0.2083 0.1454 0.1294" contact="Off" color="0.6 0.6 1.5 1.0" obj="Pelvis.obj">
-            <Transformation linear="0.0 0.0 1.0 1.0 0.0 0.0 0.0 1.0 0.0" translation="0.0 0.9809 -0.0308 "/>
+        <Body type="Box" mass="0.0001" size="0.2083 0.1454 0.1294" contact="Off" color="0.6 0.6 1.5 1.0" obj="Pelvis.obj">
+            <Transformation linear="1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0" translation="0.0 0.9809 0.0 "/>
         </Body>
-        <Joint type="Planar" bvh="Character1_Spine" lower="-1.3 0.0 -3.0" upper="0.5 0.0 3.0" springStiff="500.0 0.0 0.0" damping="0.0 0.0 0.0">
-            <Transformation linear="0.0 0.0 1.0 1.0 0.0 0.0 0.0 1.0 0.0" translation="0.0 1.7 0.0"/>
+        <Joint type="Planar" bvh="Character1_Spine" lower="-0.5 0.0 -0.1" upper="0.5 0.0 0.1" springStiff="700.0 0.0 0.0" damping="0.707 0.0 0.0" plane="YZ">
+            <Transformation linear="1.0 0.0 0.0 0.0 1.0 0.0 0.0 0.0 1.0" translation="0.0 0.9809 0.0"/>
         </Joint>
     </Node>
 

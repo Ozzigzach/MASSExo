@@ -50,7 +50,7 @@ MakeFreeJointProperties(const std::string& name,const Eigen::Isometry3d& parent_
 }
 PlanarJoint::Properties*
 MASS::
-MakePlanarJointProperties(const std::string& name,const Eigen::Isometry3d& parent_to_joint,const Eigen::Isometry3d& child_to_joint, const Eigen::Vector3d& lower,const Eigen::Vector3d& upper, const Eigen::Vector3d& springStiff, const Eigen::Vector3d& damping)
+MakePlanarJointProperties(const std::string& name,const Eigen::Isometry3d& parent_to_joint,const Eigen::Isometry3d& child_to_joint, const Eigen::Vector3d& lower,const Eigen::Vector3d& upper, const Eigen::Vector3d& springStiff, const Eigen::Vector3d& damping, const std::string& plane)
 {
 	PlanarJoint::Properties* props = new PlanarJoint::Properties();
 
@@ -66,6 +66,17 @@ MakePlanarJointProperties(const std::string& name,const Eigen::Isometry3d& paren
 	props->mForceLowerLimits = Eigen::Vector3d::Constant(-1000.0); 
 	props->mForceUpperLimits = Eigen::Vector3d::Constant(1000.0);
 	props->mDampingCoefficients = damping;
+	
+	if (plane == "XY") {
+		props->setXYPlane();
+		std::cout << "XY" << std::endl;
+	} else if (plane == "YZ") {
+		props->setYZPlane();
+		std::cout << "YZ" << std::endl;
+	} else {
+		props->setZXPlane();
+	}
+	
 
 	return props;
 }
@@ -326,8 +337,8 @@ BuildFromFile(const std::string& path,bool create_obj)
 			Eigen::Vector3d upper = string_to_vector3d(joint->Attribute("upper"));
 			Eigen::Vector3d springStiff = string_to_vector3d(joint->Attribute("springStiff"));
 			Eigen::Vector3d damping = string_to_vector3d(joint->Attribute("damping"));
-		
-			props = MASS::MakePlanarJointProperties(name,parent_to_joint,child_to_joint,lower,upper,springStiff,damping);
+			std::string plane = joint->Attribute("plane");
+			props = MASS::MakePlanarJointProperties(name,parent_to_joint,child_to_joint,lower,upper,springStiff,damping,plane);
 		}
 		else if(type == "Ball")
 		{
