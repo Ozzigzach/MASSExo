@@ -83,7 +83,7 @@ source /path/to/virtualenv/
 - Run Trained data
 ```bash
 source /path/to/virtualenv/
-./render/render ../data/metadata.txt ../nn/xxx.pt ../nn/xxx_muscle.pt
+./render/render ../data/metadata.txt ../nn/max.pt ../nn/max_muscle.pt
 ```
 
 If you are simulating with the torque-actuated model, 
