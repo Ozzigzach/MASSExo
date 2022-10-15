@@ -29,6 +29,30 @@ GetPoint()
 	return p;
 }
 
+
+/**
+ * 
+ * f0: optimal force ?
+ * l_m0: optimal muscle fibre length
+ * l_m: muscle fibre length
+ * l_t0: optimal tendon slack length
+ * l_mt0: optimal musculo-tendon length ?
+ * l_mt: musculo-tendon length
+ * activation: 0 to 1 normalised muscle activation
+ * f_toe: normalised tendon forces above this value transition from toe region to linear region
+ * k_toe: exponential shape factor
+ * k_lin: linear scale factor
+ * e_toe: tendon strain which the tendon exhibits linear behaviour
+ * e_t0: optimal tendon length? normalised?
+ * 
+ * k_pe and e_mo are shape parameters that modulate passive force curves
+ * k_pe: shape factor
+ * e_mo: passive muscle strain due to maximum isometric force
+ * 
+ * gamma: force-length relationship of individual sarcomeres
+ * l_mt_max: maximum musculo-tendon length?
+ * 
+ */
 Muscle::
 Muscle(std::string _name,double _f0,double _lm0,double _lt0,double _pen_angle,double lmax)
 	:name(_name),f0(_f0),l_m0(_lm0),l_m(l_mt - l_t0),l_t0(_lt0),l_mt0(0.0),l_mt(1.0),activation(0.0),f_toe(0.33),k_toe(3.0),k_lin(51.878788),e_toe(0.02),e_t0(0.033),k_pe(4.0),e_mo(0.6),gamma(0.5),l_mt_max(lmax)
@@ -199,18 +223,27 @@ Update()
 
 	l_m = l_mt - l_t0;
 }
+/**
+ * @return double total muscle force.
+ */
 double
 Muscle::
 GetForce()
 {
 	return Getf_A()*activation + Getf_p();
 }
+/**
+ * @return double muscle active force.
+ */
 double
 Muscle::
 Getf_A()
 {
 	return f0*g_al(l_m/l_m0);
 }
+/**
+ * @return double muscle passive force.
+ */
 double
 Muscle::
 Getf_p()
@@ -381,6 +414,10 @@ g(double _l_m)
 	double f = g_t(e_t) - (g_pl(_l_m)+activation*g_al(_l_m));
 	return f;
 }
+/**
+ * @param e_t tendon length. ?
+ * @return double: Force-strain relationship of tendon.
+ */
 double
 Muscle::
 g_t(double e_t)
@@ -393,16 +430,25 @@ g_t(double e_t)
 
 	return f_t;
 }
+/**
+ * @param _l_m muscle fibre length. ?
+ * @return double: Normalised passive muscle force.
+ */
 double
 Muscle::
 g_pl(double _l_m)
 {
+	
 	double f_pl = (exp(k_pe*(_l_m-1.0)/e_mo)-1.0)/(exp(k_pe)-1.0);
 	if(_l_m<1.0)
 		return 0.0;
 	else
 		return f_pl;
 }
+/**
+ * @param _l_m muscle fibre length. ?
+ * @return double: Active force-length relationship of muscle.
+ */
 double
 Muscle::
 g_al(double _l_m)
