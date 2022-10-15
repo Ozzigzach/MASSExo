@@ -224,7 +224,7 @@ Update()
 	l_m = l_mt - l_t0;
 }
 /**
- * @return double total muscle force.
+ * @return double: total muscle force.
  */
 double
 Muscle::
@@ -233,7 +233,7 @@ GetForce()
 	return Getf_A()*activation + Getf_p();
 }
 /**
- * @return double muscle active force.
+ * @return double: muscle active force.
  */
 double
 Muscle::
@@ -242,7 +242,7 @@ Getf_A()
 	return f0*g_al(l_m/l_m0);
 }
 /**
- * @return double muscle passive force.
+ * @return double: muscle passive force.
  */
 double
 Muscle::
