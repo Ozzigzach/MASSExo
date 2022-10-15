@@ -50,17 +50,22 @@ MakeFreeJointProperties(const std::string& name,const Eigen::Isometry3d& parent_
 }
 PlanarJoint::Properties*
 MASS::
-MakePlanarJointProperties(const std::string& name,const Eigen::Isometry3d& parent_to_joint,const Eigen::Isometry3d& child_to_joint)
+MakePlanarJointProperties(const std::string& name,const Eigen::Isometry3d& parent_to_joint,const Eigen::Isometry3d& child_to_joint, const Eigen::Vector3d& lower,const Eigen::Vector3d& upper, const Eigen::Vector3d& springStiff, const Eigen::Vector3d& damping)
 {
 	PlanarJoint::Properties* props = new PlanarJoint::Properties();
 
 	props->mName = name;
+	props->mSpringStiffnesses = springStiff;
 	props->mT_ParentBodyToJoint = parent_to_joint;
 	props->mT_ChildBodyToJoint = child_to_joint;
-	props->mIsPositionLimitEnforced = false;
+	props->mPositionLowerLimits = lower;
+	props->mPositionUpperLimits = upper;
+	props->mIsPositionLimitEnforced = true;
 	props->mVelocityLowerLimits = Eigen::Vector3d::Constant(-100.0);
 	props->mVelocityUpperLimits = Eigen::Vector3d::Constant(100.0);
-	props->mDampingCoefficients = Eigen::Vector3d::Constant(0.4);
+	props->mForceLowerLimits = Eigen::Vector3d::Constant(-1000.0); 
+	props->mForceUpperLimits = Eigen::Vector3d::Constant(1000.0);
+	props->mDampingCoefficients = damping;
 
 	return props;
 }
@@ -317,7 +322,12 @@ BuildFromFile(const std::string& path,bool create_obj)
 		}
 		else if(type == "Planar")
 		{
-			props = MASS::MakePlanarJointProperties(name,parent_to_joint,child_to_joint);
+			Eigen::Vector3d lower = string_to_vector3d(joint->Attribute("lower"));
+			Eigen::Vector3d upper = string_to_vector3d(joint->Attribute("upper"));
+			Eigen::Vector3d springStiff = string_to_vector3d(joint->Attribute("springStiff"));
+			Eigen::Vector3d damping = string_to_vector3d(joint->Attribute("damping"));
+		
+			props = MASS::MakePlanarJointProperties(name,parent_to_joint,child_to_joint,lower,upper,springStiff,damping);
 		}
 		else if(type == "Ball")
 		{
@@ -336,7 +346,7 @@ BuildFromFile(const std::string& path,bool create_obj)
 		{
 			props = MASS::MakeWeldJointProperties(name,parent_to_joint,child_to_joint);
 		}
-
+		
 		auto bn = MakeBodyNode(skel,parent,props,type,inertia);
 		if(contact)
 			bn->createShapeNodeWith<VisualAspect,CollisionAspect,DynamicsAspect>(shape);
