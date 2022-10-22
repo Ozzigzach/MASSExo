@@ -10,6 +10,7 @@ using namespace dart::dynamics;
 using namespace dart::simulation;
 using namespace dart::gui;
 
+
 Window::
 Window(Environment* env)
 	:mEnv(env),mFocus(true),mSimulating(false),mDrawOBJ(false),mDrawShadow(true),mMuscleNNLoaded(false)
@@ -36,6 +37,12 @@ Window(Environment* env)
 	py::exec("import torchvision.transforms as T",mns);
 	py::exec("import numpy as np",mns);
 	py::exec("from Model import *",mns);
+	py::exec("import matplotlib.pyplot as plt",mns);
+	py::exec("from plotter import Plotter", mns);
+
+	/** instantiate the python plotter object **/
+	plotter = py::eval("Plotter()", mns);
+
 }
 Window::
 Window(Environment* env,const std::string& nn_path)
@@ -167,7 +174,7 @@ SetFocusing()
 {
 	if(mFocus)
 	{
-		mTrans = -mEnv->GetWorld()->getSkeleton("Human")->getRootBodyNode()->getCOM();
+		mTrans = -mEnv->GetWorld()->getSkeleton("Human")->getBodyNode("Pelvis")->getCOM();
 		mTrans[1] -= 0.3;
 
 		mTrans *=1000.0;

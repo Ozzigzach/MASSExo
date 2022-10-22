@@ -6,6 +6,7 @@
 #include <pybind11/eigen.h>
 #include <pybind11/numpy.h>
 #include <pybind11/embed.h>
+#include <pybind11/stl.h>
 namespace py = pybind11;
 
 namespace MASS
@@ -22,6 +23,7 @@ public:
 	void draw() override;
 	void keyboard(unsigned char _key, int _x, int _y) override;
 	void displayTimer(int _val) override;
+	py::object plotter;
 private:
 	void SetFocusing();
 
